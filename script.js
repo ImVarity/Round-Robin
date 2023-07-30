@@ -31,6 +31,16 @@ arrow.addEventListener('click', () => roundDisplay(1))
 
 
 
+function setWinner(e) {
+    if (this.classList.contains('winner')) {
+        this.classList.toggle('winner')
+    }
+    else {
+        this.classList.toggle('winner')
+    }
+
+}
+
 
 
 
@@ -40,13 +50,16 @@ function roundDisplay(roundNum) {
     toggleRound()
 
     const round = document.createElement('section')
+    const next = document.createElement('button')
+    next.classList.add('nextPage')
     round.classList.add('round')
     round.setAttribute('id', 'current')
-    round.appendChild(arrow)
+
 
     for (let match = 0; match < Players / 2; match++) {
         const pOne = document.createElement('div')
         pOne.classList.add('card', `${sixGame[`round${roundNum}`][match][0]}`)
+        pOne.addEventListener('click', setWinner)
 
         const matchBox = document.createElement('div')
         matchBox.classList.add('matchBox')
@@ -56,6 +69,7 @@ function roundDisplay(roundNum) {
 
         const pTwo = document.createElement('div')
         pTwo.classList.add('card', `${sixGame[`round${roundNum}`][match][1]}`)
+        pTwo.addEventListener('click', setWinner)
 
         matchBox.appendChild(pOne)
         matchBox.appendChild(vs)
@@ -64,6 +78,7 @@ function roundDisplay(roundNum) {
 
     }
     
+    round.appendChild(next)
     document.body.appendChild(round)
 
     nextPage()
@@ -81,9 +96,7 @@ function toggleRound() {
     current.forEach((round) => 
     {
         if (round.id) 
-        {
             round.removeAttribute('id');
-        }
     })
 
 
