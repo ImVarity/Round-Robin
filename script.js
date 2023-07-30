@@ -12,11 +12,13 @@ sixGame = {
 }
 
 
-
+const body = document.querySelector('body')
+const opener = document.getElementById('opener')
 const inputElement = document.getElementById('myInput');
-const submitButton = document.getElementById('submitButton');
 const list = document.getElementById('list')
 const form = document.querySelector('form')
+const arrow = document.createElement('button')
+
 
 
 form.onsubmit = () => handleSubmit(event)
@@ -71,9 +73,6 @@ function removePlayer(e) {
         }
     }
 
-
-
-
 }
 
 
@@ -94,11 +93,4 @@ function handleSubmit(event) {
   }
 
 
-
-
-
-
-window.onload = () => {
-    roundDisplay(1)
-}
 
