@@ -1,0 +1,38 @@
+body {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+
+.opener {
+    height: 100vh;
+    width: auto;
+    background-color: rgb(181, 245, 179);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.round {
+    height: 100vh;
+    width: auto;
+    background-color: wheat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card {
+    height: 200px;
+    width: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    color: white;
+}
+
+.card:hover {
+    transform: scale(1.2);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
