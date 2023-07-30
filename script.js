@@ -1,6 +1,7 @@
 let Players = 6
 let playerCount = 1
 
+
 names = {}
 
 sixGame = {
@@ -13,15 +14,21 @@ sixGame = {
 
 
 const body = document.querySelector('body')
-const opener = document.getElementById('opener')
-const inputElement = document.getElementById('myInput');
+const opener = document.getElementsByClassName('opener')
+const inputElement = document.getElementById('myInput')
 const list = document.getElementById('list')
 const form = document.querySelector('form')
-const arrow = document.createElement('button')
+const arrow = document.querySelector('.nextPage')
+
 
 
 
 form.onsubmit = () => handleSubmit(event)
+
+
+
+arrow.addEventListener('click', () => roundDisplay(1))
+
 
 
 
@@ -30,8 +37,12 @@ form.onsubmit = () => handleSubmit(event)
 
 function roundDisplay(roundNum) {
 
-    const round = document.createElement('div')
+    toggleRound()
+
+    const round = document.createElement('section')
     round.classList.add('round')
+    round.setAttribute('id', 'current')
+    round.appendChild(arrow)
 
     for (let match = 0; match < Players / 2; match++) {
         const pOne = document.createElement('div')
@@ -52,12 +63,30 @@ function roundDisplay(roundNum) {
         round.append(matchBox)
 
     }
+    
     document.body.appendChild(round)
+
+    nextPage()
 }
 
 
+function nextPage() {
+    const current = document.getElementById('current')
+    current.scrollIntoView({behavior: 'smooth'})
+    
+}
+
 function toggleRound() {
-    round.classList.toggle('current')
+    const current = document.querySelectorAll('section')
+    current.forEach((round) => 
+    {
+        if (round.id) 
+        {
+            round.removeAttribute('id');
+        }
+    })
+
+
 }
 
 

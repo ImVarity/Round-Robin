@@ -5,7 +5,7 @@ body {
 
 }
 
-#opener {
+.opener {
     height: 100vh;
     width: auto;
     display: flex;
@@ -28,8 +28,12 @@ input {
     border-radius: 10px 10px;
     border: 1px solid white;
     background: transparent;
-
 }
+
+input:focus {
+    border: 2px dotted black;
+}
+
 
 input:focus {
     outline: none;
@@ -55,10 +59,16 @@ input:focus {
     align-items: center;
     background-color: black;
     color: white;
+    transition: transform .2s ease;
 }
 
 .card:hover {
-    transform: scale(1.2);
+    transform: scale(1.15);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card.winner {
+    transform: scale(1.15);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
@@ -116,5 +126,5 @@ button.nextPage {
 
 button.nextPage:hover {
     transform: scale(1.2);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: inset 10px 10px 30px black;
 }
