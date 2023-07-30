@@ -2,16 +2,39 @@ body {
     display: flex;
     flex-direction: column;
     margin: 0;
+
 }
 
 .opener {
     height: 100vh;
     width: auto;
-    background-color: rgb(181, 245, 179);
     display: flex;
     justify-content: center;
     align-items: center;
+    background-image: url('./imgs/chesscat.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #f2f2f2;
 }
+
+input {
+    border: none;
+    height: 40px;
+    font-size: 15px;
+    font-weight: 0;
+    padding: 0px 10px;
+    border-radius: 10px 10px;
+    border: 1px solid white;
+    background: transparent;
+
+}
+
+input:focus {
+    outline: none;
+}
+
+
 
 .round {
     height: 100vh;
@@ -20,6 +43,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 30px;
 }
 
 .card {
@@ -35,4 +59,39 @@ body {
 .card:hover {
     transform: scale(1.2);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+
+.matchBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+form {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    gap: 5px;
+
+}
+
+.listPlayer {
+    height: 40px;
+    width: 170px;
+    color: white;
+    display: flex;
+    font-size: large;
+    font-weight: 100;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 1px 10px 50px black;
+}
+
+#list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+
 }
