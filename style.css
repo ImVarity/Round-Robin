@@ -2,7 +2,24 @@ body {
     display: flex;
     flex-direction: column;
     margin: 0;
+    scroll-snap-type: y mandatory;
+    overflow-y: scroll;
 
+}
+
+form {
+    display: block;
+}
+
+
+section {
+    background-image: url('./imgs/chessrocks.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #f2f2f2;
+    scroll-snap-align: start;
+    
 }
 
 .opener {
@@ -19,10 +36,21 @@ body {
     background-color: #f2f2f2;
 }
 
+
+
+.opener .title {
+    font-size: 100px;
+    position: absolute;
+    top: 0;
+    color: white;
+    margin: 0;
+    padding: 0;
+
+}
 input {
     border: none;
     height: 40px;
-    font-size: 15px;
+    font-size: 17px;
     font-weight: 0;
     padding: 0px 10px;
     border-radius: 10px 10px;
@@ -32,12 +60,9 @@ input {
 
 input:focus {
     border: 2px dotted black;
-}
-
-
-input:focus {
     outline: none;
 }
+
 
 
 
@@ -83,14 +108,6 @@ input:focus {
     align-items: center;
 }
 
-form {
-    display: flex;
-    flex-direction: row-reverse;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-
-}
 
 .listPlayer {
     height: 40px;
@@ -102,6 +119,7 @@ form {
     justify-content: center;
     align-items: center;
     box-shadow: 1px 10px 50px black;
+    backdrop-filter: blur(3px);
 }
 
 #list {
@@ -135,10 +153,18 @@ button.nextPage:hover {
 }
 
 
-.background {
-    background-image: url('./imgs/chessrocks.jpeg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-color: #f2f2f2;
+
+
+.wrapper {
+    flex-wrap: wrap;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 60%;
+    width: 50%;
+    height: 100px;
+    margin: 0;
+    padding: 0;
+    gap: 0;
 }

@@ -26,6 +26,8 @@ sixGame = {
 }
 
 
+
+
 const body = document.querySelector('body')
 const opener = document.getElementsByClassName('opener')
 const inputElement = document.getElementById('myInput')
@@ -38,11 +40,12 @@ const arrow = document.querySelector('.nextPage')
 
 form.onsubmit = () => handleSubmit(event)
 
-
-
 arrow.addEventListener('click', () => roundDisplay(currentRound))
 
-function setWinnerTest(e) {
+
+
+
+function setWinner(e) {
 
     let personTop;
     let personBottom;
@@ -64,51 +67,23 @@ function setWinnerTest(e) {
 
     if (!e.target.classList.contains('winner')) {
         e.target.classList.toggle('winner')
-        updateWinsTest(personTop, personBottom, keyTop, keyBottom, true)
+        updateWins(personTop, personBottom, keyTop, keyBottom, true)
 
     }
     else if (e.target.classList.contains('winner')) {
         e.target.classList.toggle('winner')
-        updateWinsTest(personTop, personBottom, keyTop, keyBottom, false)
+        updateWins(personTop, personBottom, keyTop, keyBottom, false)
 
     }
 
 }
 
-function setWinner(e) {
-    e.stopPropagation()
-    // Adds win to winner, adds lose to loser
-    if (!e.target.classList.contains('winner')) {
-        e.target.classList.toggle('winner')
-        if (e.target.classList.contains('top'))
-        {
-            updateWins(e.target, true)
-            updateLoses(e.target.nextSibling.nextSibling, true)
-        }
-        else if (e.target.classList.contains('bottom'))
-        {
-            updateWins(e.target, true)
-            updateLoses(e.target.previousSibling.previousSibling, true)
-        }
-    }
-    // Removes win from winner, removes lose from loser
-    else {
-        e.target.classList.toggle('winner')
-        if (e.target.classList.contains('top'))
-        {
-            updateWins(e.target, false)
-            updateLoses(e.target.nextSibling.nextSibling, false)
-        }
-        else if (e.target.classList.contains('bottom'))
-        {
-            updateWins(e.target, false)
-            updateLoses(e.target.previousSibling.previousSibling, false)
-        }
-    }
 
-}
 
-function updateWinsTest(person, buddy, key, keyBuddy, selected) {
+
+
+
+function updateWins(person, buddy, key, keyBuddy, selected) {
     const updatePerson = person.querySelector('.wins')
     const updateBuddy = buddy.querySelector('.loses')
     if (selected)
@@ -131,24 +106,8 @@ function updateWinsTest(person, buddy, key, keyBuddy, selected) {
 
 
 
-function updateWins(player, selected) {
-    const wins = player.querySelector('.wins')
-    if (selected)
-        wins.textContent = (+wins.textContent) + 1
-    else 
-        wins.textContent = (+wins.textContent) - 1
-}
 
 
-function updateLoses(player, selected) {
-    const loses = player.querySelector('.loses')
-    if (selected) 
-        loses.textContent = (+loses.textContent) + 1
-    else
-        loses.textContent = (+loses.textContent) - 1
-}
-
-copy = {}
 
 
 function cardDisplay(player) {
@@ -194,6 +153,7 @@ function cardDisplay(player) {
 }
 
 
+
 // still need to fix this
 function showStats(e) {
     const score = e.target
@@ -212,21 +172,19 @@ function roundDisplay(roundNum) {
 
     for (let match = 0; match < Players / 2; match++) {
         const pOne = document.createElement('div')
-        pOne.classList.add('card', 'top', `${sixGame[`round${roundNum}`][match][0]}`)
-        pOne.addEventListener('click', setWinnerTest)
+        const pTwo = document.createElement('div')
+        const vs = document.createElement('p')
 
-        
+        pOne.classList.add('card', 'top', `${sixGame[`round${roundNum}`][match][0]}`)
+        pTwo.classList.add('card', 'bottom', `${sixGame[`round${roundNum}`][match][1]}`)
+
+        pOne.addEventListener('click', setWinner)
+        pTwo.addEventListener('click', setWinner)
 
         const matchBox = document.createElement('div')
         matchBox.classList.add('matchBox')
 
-        const vs = document.createElement('p')
         vs.textContent = "VS"
-
-        const pTwo = document.createElement('div')
-        pTwo.classList.add('card', 'bottom', `${sixGame[`round${roundNum}`][match][1]}`)
-        pTwo.addEventListener('click', setWinnerTest)
-        
 
         matchBox.appendChild(pOne)
         matchBox.appendChild(vs)
@@ -235,9 +193,6 @@ function roundDisplay(roundNum) {
 
         cardDisplay(pTwo)
         cardDisplay(pOne)
-
-        
-
     }
     
     
@@ -255,6 +210,8 @@ function nextPage() {
     
 }
 
+
+
 function toggleRound() {
     const current = document.querySelectorAll('section')
     current.forEach((round) => 
@@ -265,6 +222,7 @@ function toggleRound() {
 
 
 }
+
 
 
 function removePlayer(e) {
@@ -296,13 +254,9 @@ function handleSubmit(event) {
         playerList.addEventListener('click', removePlayer)
         playerList.textContent = `${userInput.value}`
         list.appendChild(playerList)
-        console.log(names)
-        console.log(wins)
-        console.log(loses)
     }
     userInput.value = '';
   }
 
 
 
-// window.onload = () => roundDisplay(1)
