@@ -1,15 +1,21 @@
 let Players = 6
 let playerCount = 1
+let currentRound = 1
+let totalRounds = Players - 1
 
+// names = {
+//     "1": "GEORGE",
+//     "2": "BOB",
+//     "3": "RYAN",
+//     "4": "DAN",
+//     "5": "ANDREW",
+//     "6": "JOSH",
+// }
 
-names = {
-    "1": "GEORGE",
-    "2": "BOB",
-    "3": "RYAN",
-    "4": "DAN",
-    "5": "ANDREW",
-    "6": "JOSH",
-}
+names = {}
+wins = {}
+loses = {}
+
 
 sixGame = {
     "round1": [['6', '1'], ['2', '5'], ['3', '4']],
@@ -34,9 +40,40 @@ form.onsubmit = () => handleSubmit(event)
 
 
 
-arrow.addEventListener('click', () => roundDisplay(1))
+arrow.addEventListener('click', () => roundDisplay(currentRound))
+
+function setWinnerTest(e) {
+
+    let personTop;
+    let personBottom;
+
+    if (e.target.classList.item(1) == 'top')
+    {
+        personTop = e.target
+        personBottom = e.target.nextSibling.nextSibling
+    }
+    else if (e.target.classList.item(1) == 'bottom')
+    {
+        personTop = e.target
+        personBottom = e.target.previousSibling.previousSibling
+    }
 
 
+    let keyTop = `${personTop.classList.item(2)}`
+    let keyBottom =`${personBottom.classList.item(2)}`
+
+    if (!e.target.classList.contains('winner')) {
+        e.target.classList.toggle('winner')
+        updateWinsTest(personTop, personBottom, keyTop, keyBottom, true)
+
+    }
+    else if (e.target.classList.contains('winner')) {
+        e.target.classList.toggle('winner')
+        updateWinsTest(personTop, personBottom, keyTop, keyBottom, false)
+
+    }
+
+}
 
 function setWinner(e) {
     e.stopPropagation()
@@ -71,6 +108,28 @@ function setWinner(e) {
 
 }
 
+function updateWinsTest(person, buddy, key, keyBuddy, selected) {
+    const updatePerson = person.querySelector('.wins')
+    const updateBuddy = buddy.querySelector('.loses')
+    if (selected)
+    {
+        wins[key] += 1
+        loses[keyBuddy] += 1
+    }
+    else
+    {
+        wins[key] -= 1
+        loses[keyBuddy] -= 1
+    }
+    
+    updatePerson.textContent = `${wins[key]}`
+    updateBuddy.textContent = `${loses[keyBuddy]}`
+
+    
+}
+
+
+
 
 function updateWins(player, selected) {
     const wins = player.querySelector('.wins')
@@ -81,7 +140,6 @@ function updateWins(player, selected) {
 }
 
 
-
 function updateLoses(player, selected) {
     const loses = player.querySelector('.loses')
     if (selected) 
@@ -90,10 +148,11 @@ function updateLoses(player, selected) {
         loses.textContent = (+loses.textContent) - 1
 }
 
-
+copy = {}
 
 
 function cardDisplay(player) {
+    let key = `${player.classList.item(2)}`
     const name = document.createElement('div')
     const score = document.createElement('div')
     const winbox = document.createElement('div')
@@ -111,13 +170,13 @@ function cardDisplay(player) {
     losebox.style.cssText = "display: flex; justify-content: center; flex-direction: column; align-items: center; font-size: 12px"
 
     winbox.textContent = "WINS"
-    wins.textContent = 0
+    wins.textContent = wins[key]
     losebox.textContent = "LOSES"
-    loses.textContent = 0
+    loses.textContent = loses[key]
 
 
 
-    name.textContent = names[`${player.classList.item(2)}`]
+    name.textContent = names[key]
 
 
     player.appendChild(name)
@@ -131,10 +190,8 @@ function cardDisplay(player) {
     player.appendChild(score)
 
 
+
 }
-
-
-
 
 
 // still need to fix this
@@ -144,26 +201,20 @@ function showStats(e) {
 
 
 
-
-
-
-
 function roundDisplay(roundNum) {
-
     toggleRound()
 
     const round = document.createElement('section')
-    const next = document.createElement('button')
-    next.classList.add('nextPage')
-    round.classList.add('round')
+    const nextBtn = document.createElement('button')
+    round.classList.add('round', 'background')
     round.setAttribute('id', 'current')
 
 
     for (let match = 0; match < Players / 2; match++) {
         const pOne = document.createElement('div')
         pOne.classList.add('card', 'top', `${sixGame[`round${roundNum}`][match][0]}`)
-        pOne.addEventListener('click', setWinner)
-        cardDisplay(pOne)
+        pOne.addEventListener('click', setWinnerTest)
+
         
 
         const matchBox = document.createElement('div')
@@ -174,26 +225,33 @@ function roundDisplay(roundNum) {
 
         const pTwo = document.createElement('div')
         pTwo.classList.add('card', 'bottom', `${sixGame[`round${roundNum}`][match][1]}`)
-        pTwo.addEventListener('click', setWinner)
-        cardDisplay(pTwo)
+        pTwo.addEventListener('click', setWinnerTest)
+        
 
         matchBox.appendChild(pOne)
         matchBox.appendChild(vs)
         matchBox.appendChild(pTwo)
         round.append(matchBox)
 
+        cardDisplay(pTwo)
+        cardDisplay(pOne)
+
+        
+
     }
     
-    round.appendChild(next)
+    
     document.body.appendChild(round)
 
     nextPage()
 }
 
 
+
 function nextPage() {
     const current = document.getElementById('current')
     current.scrollIntoView({behavior: 'smooth'})
+    currentRound++
     
 }
 
@@ -217,10 +275,11 @@ function removePlayer(e) {
     for (const key in name) {
         if (name.hasOwnProperty(key) && name[key] == name) {
             delete name[key]
+            delete wins[key]
+            delete loses[key]
             return
         }
     }
-
 }
 
 
@@ -229,16 +288,21 @@ function handleSubmit(event) {
     event.preventDefault()
     const userInput = document.getElementById('myInput');
     if (playerCount <= Players) {
-        names[`${playerCount++}`] = `${userInput.value.toUpperCase()}`
+        names[`${playerCount}`] = `${userInput.value.toUpperCase()}`
+        wins[`${playerCount}`] = 0
+        loses[`${playerCount++}`] = 0
         const playerList = document.createElement('div')
         playerList.classList.add('listPlayer')
         playerList.addEventListener('click', removePlayer)
         playerList.textContent = `${userInput.value}`
         list.appendChild(playerList)
         console.log(names)
+        console.log(wins)
+        console.log(loses)
     }
     userInput.value = '';
   }
 
 
 
+// window.onload = () => roundDisplay(1)

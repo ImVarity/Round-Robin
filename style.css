@@ -72,6 +72,8 @@ input:focus {
 .card.winner {
     transform: scale(1.15);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    background: white;
+    color: black;
 }
 
 
@@ -111,12 +113,13 @@ form {
 }
 
 button.nextPage {
+    position: fixed;
     width: 100%;
     height: 8vh;
     font-size: larger;
-    position: absolute;
     color: white;
-    bottom: 0%;
+    position: absolute;
+    bottom: 0; 
     background: transparent;
     border: none;
     border-top: 1px solid white;
@@ -132,3 +135,10 @@ button.nextPage:hover {
 }
 
 
+.background {
+    background-image: url('./imgs/chessrocks.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #f2f2f2;
+}
