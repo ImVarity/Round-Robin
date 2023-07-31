@@ -2,7 +2,14 @@ let Players = 6
 let playerCount = 1
 
 
-names = {}
+names = {
+    "1": "ONE",
+    "2": "TWO",
+    "3": "THREE",
+    "4": "FOUR",
+    "5": "FIVE",
+    "6": "SIX",
+}
 
 sixGame = {
     "round1": [['6', '1'], ['2', '5'], ['3', '4']],
@@ -13,7 +20,7 @@ sixGame = {
 }
 
 
-const body = document.querySelector('body')
+body = document.querySelector('body')
 const opener = document.getElementsByClassName('opener')
 const inputElement = document.getElementById('myInput')
 const list = document.getElementById('list')
@@ -41,7 +48,53 @@ function setWinner(e) {
 
 }
 
+function cardDisplay(player) {
+    const name = document.createElement('div')
+    const score = document.createElement('div')
+    const winbox = document.createElement('div')
+    const wins = document.createElement('div')
+    const losebox = document.createElement('div')
+    const loses = document.createElement('div')
 
+
+    name.className = 'name'
+    wins.className = 'wins'
+    loses.className = 'loses'
+
+    score.style.cssText = "display: flex; justify-content: space-around; align-items: center; width: 100%;"
+    winbox.style.cssText = "display: flex; justify-content: center; flex-direction: column; align-items: center; font-size: 12px"
+    losebox.style.cssText = "display: flex; justify-content: center; flex-direction: column; align-items: center; font-size: 12px"
+
+    winbox.textContent = "WINS"
+    wins.textContent = 0
+    losebox.textContent = "LOSES"
+    loses.textContent = 0
+
+
+
+    name.textContent = names[`${player.classList.item(1)}`]
+
+
+    player.appendChild(name)
+
+    winbox.appendChild(wins)
+    losebox.appendChild(loses)
+
+    score.append(winbox)
+    score.append(losebox)
+
+    player.appendChild(score)
+
+
+}
+
+function updateScore(player) {
+    const loses = player.querySelectorAll('loses')
+}
+
+function updateWins(player) {
+    const wins = player.querySelectorAll('.wins')
+}
 
 
 
@@ -60,6 +113,8 @@ function roundDisplay(roundNum) {
         const pOne = document.createElement('div')
         pOne.classList.add('card', `${sixGame[`round${roundNum}`][match][0]}`)
         pOne.addEventListener('click', setWinner)
+        cardDisplay(pOne)
+        
 
         const matchBox = document.createElement('div')
         matchBox.classList.add('matchBox')
@@ -70,6 +125,7 @@ function roundDisplay(roundNum) {
         const pTwo = document.createElement('div')
         pTwo.classList.add('card', `${sixGame[`round${roundNum}`][match][1]}`)
         pTwo.addEventListener('click', setWinner)
+        cardDisplay(pTwo)
 
         matchBox.appendChild(pOne)
         matchBox.appendChild(vs)

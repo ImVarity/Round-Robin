@@ -55,10 +55,12 @@ input:focus {
     height: 200px;
     width: 150px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     background-color: black;
     color: white;
+    gap: 10px;
     transition: transform .2s ease;
 }
 
