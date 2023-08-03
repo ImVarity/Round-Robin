@@ -14,11 +14,6 @@ html {
 
 
 section {
-    background-image: url('./imgs/chessrocks.jpeg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-color: #f2f2f2;
     scroll-snap-align: start;
     flex-wrap: wrap;
     
@@ -49,6 +44,9 @@ section {
     padding: 0;
 
 }
+
+
+
 input {
     border: none;
     height: 40px;
@@ -77,6 +75,7 @@ input:focus {
     align-items: center;
     gap: 30px;
     scroll-snap-align: start;
+    background-size: cover;
 }
 
 .card {
@@ -86,7 +85,7 @@ input:focus {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: black;
+    background-color: rgba(0, 0, 0, 0.75);
     color: white;
     gap: 10px;
     transition: transform .2s ease;
@@ -101,7 +100,7 @@ input:focus {
 .card.winner {
     transform: scale(1.15);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    background: white;
+    background-color: rgba(255, 255, 255, 0.75);
     color: black;
 }
 
@@ -128,17 +127,19 @@ input:focus {
 
 #list {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    gap: 10px;
+    flex-wrap: wrap;
+    height: 30%;
+    width: 50%;
+    gap: 5px;
 
 }
 
 
-
 button#next,
 .statButton {
-    width: 100%;
+    width: 100vh;
     height: 8vh;
     font-size: larger;
     color: white;
@@ -155,7 +156,7 @@ button#next,
 
 button#next:hover,
 .statButton {
-    transform: scale(1.2);
+    transform: scale(1.1);
     box-shadow: inset 10px 10px 30px black;
 }
 
@@ -197,6 +198,7 @@ button#next:hover,
 
 .statBackground {
     background-image: url('./imgs/cat.jpeg');
+    background-size: cover;
     
 }
 

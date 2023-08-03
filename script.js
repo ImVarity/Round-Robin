@@ -212,6 +212,7 @@ function roundDisplay(roundNum) {
 
     }
 
+    randomBackground(round)
     document.body.appendChild(round)
 
     nextPage()
@@ -370,3 +371,18 @@ function handleSubmit(event) {
 }
 
 
+
+
+function randomBackground(page) {
+    const backgroundImageList = [
+        'imgs/nocolorcat.jpeg',
+        'imgs/catvcat.jpeg',
+        'imgs/catdog.jpeg',
+        'imgs/catstare.jpeg'
+      ]
+    
+
+    const randomImageIndex = Math.floor(Math.random() * backgroundImageList.length);
+    const randomBackgroundImage = `url(${backgroundImageList[randomImageIndex]})`;
+    page.style.backgroundImage = randomBackgroundImage;
+}
