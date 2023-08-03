@@ -1,8 +1,7 @@
 let game;
 names = {}
 wins = {}
-loses = {}
-
+losses = {}
 copy = []
 
 
@@ -48,19 +47,12 @@ tenGame = {
 
 
 const body = document.querySelector('body')
-const opener = document.getElementsByClassName('opener')
-const inputElement = document.getElementById('myInput')
-const list = document.getElementById('list')
 const form = document.querySelector('form')
 const arrow = document.getElementById('next')
 
 
 
-
-
-
 form.onsubmit = () => handleSubmit(event)
-
 arrow.addEventListener('click', () => roundDisplay(currentRound))
 
 
@@ -101,93 +93,26 @@ function setWinner(e) {
 
 
 
-
-
-
 function updateWins(person, buddy, key, keyBuddy, selected) {
     const updatePerson = person.querySelector('.wins')
-    const updateBuddy = buddy.querySelector('.loses')
+    const updateBuddy = buddy.querySelector('.losses')
     if (selected)
     {
         wins[key] += 1
-        loses[keyBuddy] += 1
+        losses[keyBuddy] += 1
     }
     else
     {
         wins[key] -= 1
-        loses[keyBuddy] -= 1
+        losses[keyBuddy] -= 1
     }
     
     updatePerson.textContent = `${wins[key]}`
-    updateBuddy.textContent = `${loses[keyBuddy]}`
+    updateBuddy.textContent = `${losses[keyBuddy]}`
 
     
 }
 
-
-
-
-
-function endScreen() {
-    const endScreen = document.createElement('section')
-    endScreen.classList.add('round', 'statBackground')
-
-    let winner = []
-    let winCount = 0
-    let lossCount;
-
-    for (let key = 1; key <= Players; key++) {
-        let nameText = names[`${key}`]
-        let winsText = wins[`${key}`]
-        let losesText = loses[`${key}`]
-
-        const card = document.createElement('div')
-        const crown = document.createElement('div')
-        const playerName = document.createElement('div')
-        const playerWins = document.createElement('div')
-        const playerLoses = document.createElement('div')
-
-        playerName.textContent = `${nameText}`
-        playerWins.textContent = `${winsText}`
-        playerLoses.textContent = `${losesText}`
-
-        card.classList.add('statCard')
-
-
-        if (winsText > winCount) {
-            winCount = winsText
-            lossCount = losesText
-            if (winner.length > 0) {
-                const current = endScreen.querySelector('.crown')
-                current.classList.remove('crown')
-            }
-            winner = []
-            crown.classList.add('crown')
-            winner.push(card)
-        }
-
-
-
-        card.appendChild(crown)
-        card.appendChild(playerName)
-        card.appendChild(playerWins)
-        card.appendChild(playerLoses)
-
-        endScreen.appendChild(card)
-
-    }
-
-
-    document.body.appendChild(endScreen)
-
-}
-
-
-function clear() {
-
-
-
-}
 
 
 function cardDisplay(player) {
@@ -195,22 +120,29 @@ function cardDisplay(player) {
     const name = document.createElement('div')
     const score = document.createElement('div')
     const winbox = document.createElement('div')
-    const wins = document.createElement('div')
+    const winCount = document.createElement('div')
     const losebox = document.createElement('div')
-    const loses = document.createElement('div')
+    const lossCount = document.createElement('div')
+
+    name.addEventListener('click', e => e.stopPropagation())
+    winbox.addEventListener('click', e => e.stopPropagation())
+    losebox.addEventListener('click', e => e.stopPropagation())
+
+
 
 
     name.className = 'name'
-    wins.className = 'wins'
-    loses.className = 'loses'
+    winCount.className = 'wins'
+    lossCount.className = 'losses'
 
     score.style.cssText = "display: flex; justify-content: space-around; align-items: center; width: 100%;"
     winbox.style.cssText = "display: flex; justify-content: center; flex-direction: column; align-items: center; font-size: 12px"
     losebox.style.cssText = "display: flex; justify-content: center; flex-direction: column; align-items: center; font-size: 12px"
 
     winbox.textContent = "WINS"
-    losebox.textContent = "LOSES"
-
+    winCount.textContent = wins[`${key}`]
+    losebox.textContent = "LOSSES"
+    lossCount.textContent = losses[`${key}`]
 
 
     name.textContent = names[key]
@@ -218,8 +150,8 @@ function cardDisplay(player) {
 
     player.appendChild(name)
 
-    winbox.appendChild(wins)
-    losebox.appendChild(loses)
+    winbox.appendChild(winCount)
+    losebox.appendChild(lossCount)
 
     score.append(winbox)
     score.append(losebox)
@@ -234,18 +166,23 @@ function cardDisplay(player) {
 
 function roundDisplay(roundNum) {
 
-    
-    const test = document.createElement('button')
-    test.addEventListener('click', endScreen)
-
     toggleRound()
 
-    const nextRoundBtn = document.getElementById('next')
+    let nextRoundBtn = document.getElementById('next')
+    if (roundNum == (Object.keys(names).length - 1)){
+        nextRoundBtn = document.createElement('button')
+        nextRoundBtn.classList.add('statButton')
+        nextRoundBtn.addEventListener('click', endScreen)
+        nextRoundBtn.textContent = "⬇"
+    }
+    const title = document.createElement('div')
     const round = document.createElement('section')
+    title.className = "roundTitle"
+    title.textContent = `ROUND ${roundNum}`
     round.classList.add('round', 'background')
     round.setAttribute('id', 'current')
     round.appendChild(nextRoundBtn)
-    round.appendChild(test)
+    round.appendChild(title)
 
     for (let match = 0; match < Players / 2; match++) {
         const pOne = document.createElement('div')
@@ -274,11 +211,91 @@ function roundDisplay(roundNum) {
 
 
     }
-    
-    
+
     document.body.appendChild(round)
 
     nextPage()
+}
+
+
+
+function endScreen() {
+    toggleRound()
+    const endScreen = document.createElement('section')
+    endScreen.classList.add('round', 'statBackground')
+    endScreen.setAttribute('id', 'current')
+    const statBox = document.createElement('div')
+    statBox.className = "statBox"
+    const title = document.createElement('div')
+    title.className = "statTitle"
+    title.textContent = "STATISTICS"
+
+    let winner = []
+    let winCount = 0
+    let lossCount;
+
+    for (let key = 1; key <= Players; key++) {
+        let nameText = names[`${key}`]
+        let winsText = wins[`${key}`]
+        let lossesText = losses[`${key}`]
+
+        const card = document.createElement('div')
+        const crown = document.createElement('div')
+        const playerName = document.createElement('div')
+        const playerWins = document.createElement('div')
+        const playerLosses = document.createElement('div')
+
+
+        playerName.textContent = `${nameText}`
+        playerWins.textContent = `${winsText}`
+        playerLosses.textContent = `${lossesText}`
+
+
+        playerWins.style.cssText = "color: gold;"
+        playerLosses.style.cssText = "color: red;"
+
+        card.classList.add('statCard')
+
+
+        if (winsText > winCount) {
+            winCount = winsText
+            lossCount = lossesText
+            if (winner.length > 0) {
+                const current = statBox.querySelector('.crown')
+                current.classList.remove('crown')
+            }
+            winner = []
+            crown.classList.add('crown')
+            winner.push(card)
+        }
+        else if (winsText == winCount) {
+            if (lossesText > lossCount) {
+                if (winner.length > 0) {
+                    const current = statBox.querySelector('.crown')
+                    current.classList.remove('crown')
+                }
+                winner = []
+                crown.classList.add('crown')
+                winner.push(card)
+            }
+        }
+
+
+
+        card.appendChild(crown)
+        card.appendChild(playerName)
+        card.appendChild(playerWins)
+        card.appendChild(playerLosses)
+        
+
+        statBox.appendChild(card)
+
+    }
+    endScreen.appendChild(title)
+    endScreen.appendChild(statBox)
+    document.body.appendChild(endScreen)
+    nextPage()
+
 }
 
 
@@ -305,37 +322,18 @@ function toggleRound() {
 
 
 
-
-
-function removePlayer(e) {
-    const removePlayer = e.target
-    const name = removePlayer.textContent.toUpperCase()
-    removePlayer.remove()
-    playerCount--
-    for (const key in name) {
-        if (name.hasOwnProperty(key) && name[key] == name) {
-            delete name[key]
-            delete wins[key]
-            delete loses[key]
-            return
-        }
-    }
-}
-
-
-
 function handleSubmit(event) {
     event.preventDefault()
     const userInput = document.getElementById('myInput');
     names[`${playerCount}`] = `${userInput.value.toUpperCase()}`
     wins[`${playerCount}`] = 0
-    loses[`${playerCount++}`] = 0
+    losses[`${playerCount++}`] = 0
     const playerList = document.createElement('div')
     playerList.classList.add('listPlayer')
     playerList.addEventListener('click', removePlayer)
     playerList.textContent = `${userInput.value}`
     list.appendChild(playerList)
-    userInput.value = '';
+    userInput.value = ''
     switch(Object.keys(names).length) {
         case 6:
             Players = Object.keys(names).length
@@ -349,15 +347,26 @@ function handleSubmit(event) {
             Players = Object.keys(names).length
             game = tenGame
             break;
-        default:
-            console.log("keep going")
       }
 
     
-  }
+}
 
 
 
-
+  function removePlayer(e) {
+    const removePlayer = e.target
+    const name = removePlayer.textContent.toUpperCase()
+    removePlayer.remove()
+    playerCount--
+    for (const key in name) {
+        if (name.hasOwnProperty(key) && name[key] == name) {
+            delete name[key]
+            delete wins[key]
+            delete losses[key]
+            return
+        }
+    }
+}
 
 
