@@ -20,8 +20,6 @@ sixGame = {
     "round4": [['1', '4'], ['2', '3'], ['5', '6']],
     "round5": [['1', '5'], ['2', '4'], ['3', '6']]
 }
-
-
 eightGame = {
     "round1": [['1', '8'], ['2', '7'], ['3', '6'], ['4', '5']],
     "round2": [['8', '5'], ['6', '4'], ['7', '3'], ['1', '2']],
@@ -31,9 +29,6 @@ eightGame = {
     "round6": [['8', '7'], ['1', '6'], ['2', '5'], ['3', '4']],
     "round7": [['4', '8'], ['5', '3'], ['6', '2'], ['7', '1']],
 }
-
-
-
 tenGame = {
     "round1": [['1', '10'], ['2', '9'], ['3', '8'], ['4', '7'], ['5', '6']],
     "round2": [['10', '6'], ['7', '5'], ['8', '4'], ['9', '3'], ['1', '2']],
@@ -135,33 +130,48 @@ function updateWins(person, buddy, key, keyBuddy, selected) {
 
 function endScreen() {
     const endScreen = document.createElement('section')
-    endScreen.classList.add('round')
-    
-    for (let i = 1; i < Players; i++) {
-        let nameText = names[`${i}`]
-        let winsText = wins[`${i}`]
-        let losesText = loses[`${i}`]
+    endScreen.classList.add('round', 'statBackground')
 
+    let winner = []
+    let winCount = 0
+    let lossCount;
+
+    for (let key = 1; key <= Players; key++) {
+        let nameText = names[`${key}`]
+        let winsText = wins[`${key}`]
+        let losesText = loses[`${key}`]
 
         const card = document.createElement('div')
-        const name = document.createElement('div')
-        const wins = document.createElement('div')
-        const loses = document.createElement('div')
+        const crown = document.createElement('div')
+        const playerName = document.createElement('div')
+        const playerWins = document.createElement('div')
+        const playerLoses = document.createElement('div')
 
-        name.textContent = nameText
-        wins.textContent = winsText
-        loses.textContent = losesText
+        playerName.textContent = `${nameText}`
+        playerWins.textContent = `${winsText}`
+        playerLoses.textContent = `${losesText}`
 
-
-
-        card.classList = "card"
-
-
-        card.appendChild(name)
-        card.appendChild(wins)
-        card.appendChild(loses)
+        card.classList.add('statCard')
 
 
+        if (winsText > winCount) {
+            winCount = winsText
+            lossCount = losesText
+            if (winner.length > 0) {
+                const current = endScreen.querySelector('.crown')
+                current.classList.remove('crown')
+            }
+            winner = []
+            crown.classList.add('crown')
+            winner.push(card)
+        }
+
+
+
+        card.appendChild(crown)
+        card.appendChild(playerName)
+        card.appendChild(playerWins)
+        card.appendChild(playerLoses)
 
         endScreen.appendChild(card)
 
@@ -169,6 +179,13 @@ function endScreen() {
 
 
     document.body.appendChild(endScreen)
+
+}
+
+
+function clear() {
+
+
 
 }
 
@@ -217,17 +234,18 @@ function cardDisplay(player) {
 
 function roundDisplay(roundNum) {
 
-    const nextRoundBtn = document.getElementById('next')
-
+    
+    const test = document.createElement('button')
+    test.addEventListener('click', endScreen)
 
     toggleRound()
 
+    const nextRoundBtn = document.getElementById('next')
     const round = document.createElement('section')
-    round.appendChild(nextRoundBtn)
-
     round.classList.add('round', 'background')
     round.setAttribute('id', 'current')
-
+    round.appendChild(nextRoundBtn)
+    round.appendChild(test)
 
     for (let match = 0; match < Players / 2; match++) {
         const pOne = document.createElement('div')
@@ -282,7 +300,10 @@ function toggleRound() {
     })
 
 
+
 }
+
+
 
 
 
