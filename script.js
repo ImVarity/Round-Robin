@@ -2,8 +2,9 @@ let game;
 names = {}
 wins = {}
 losses = {}
-copy = []
+ties = {}
 
+crossTableData = {}
 
 
 let Players;
@@ -12,13 +13,21 @@ let currentRound = 1
 let totalRounds = Players - 1
 
 
-sixGame = {
-    "round1": [['6', '1'], ['2', '5'], ['3', '4']],
-    "round2": [['1', '2'], ['3', '5'], ['4', '6']],
-    "round3": [['1', '3'], ['2', '6'], ['4', '5']],
-    "round4": [['1', '4'], ['2', '3'], ['5', '6']],
-    "round5": [['1', '5'], ['2', '4'], ['3', '6']]
+
+fourGame = {
+    "round1": [['1', '4'], ['2', '3']],
+    "round2": [['4', '3'], ['1', '2']],
+    "round3": [['2', '4'], ['3', '1']]
 }
+sixGame = {
+    "round1": [['6', '1'], ['5', '2'], ['3', '4']],
+    "round2": [['1', '2'], ['5', '3'], ['4', '6']],
+    "round3": [['3', '1'], ['2', '6'], ['4', '5']],
+    "round4": [['1', '4'], ['3', '2'], ['6', '5']],
+    "round5": [['5', '1'], ['2', '4'], ['6', '3']] 
+}
+
+// check for whites and black
 eightGame = {
     "round1": [['1', '8'], ['2', '7'], ['3', '6'], ['4', '5']],
     "round2": [['8', '5'], ['6', '4'], ['7', '3'], ['1', '2']],
@@ -60,38 +69,53 @@ arrow.addEventListener('click', () => roundDisplay(currentRound))
 
 function setWinner(e) {
 
-    let personTop;
-    let personBottom;
+    let person;
+    let buddy;
 
     if (e.target.classList.item(1) == 'top')
     {
-        personTop = e.target
-        personBottom = e.target.nextSibling.nextSibling
+        person = e.target
+        buddy = e.target.nextSibling.nextSibling
     }
     else if (e.target.classList.item(1) == 'bottom')
     {
-        personTop = e.target
-        personBottom = e.target.previousSibling.previousSibling
+        person = e.target
+        buddy = e.target.previousSibling.previousSibling
     }
 
 
-    let keyTop = `${personTop.classList.item(2)}`
-    let keyBottom =`${personBottom.classList.item(2)}`
+    let keyTop = `${person.classList.item(2)}`
+    let keyBottom =`${buddy.classList.item(2)}`
 
-    if (!e.target.classList.contains('winner')) {
+    // Clicked a card which created a tie
+    if ((!person.classList.contains('winner') && buddy.classList.contains('winner'))){
         e.target.classList.toggle('winner')
-        updateWins(personTop, personBottom, keyTop, keyBottom, true)
+        checkTie(person, keyTop, buddy, keyBottom, true)
+        handleTie(person, buddy, keyTop, keyBottom, true)
+    }
+
+    // Already was a tie and unclicked a clard
+    else if ((person.classList.contains('tie') && buddy.classList.contains('tie'))) {
+        e.target.classList.toggle('winner')
+        checkTie(person, keyTop, buddy, keyBottom, false)
+        handleTie(person, buddy, keyTop, keyBottom, false)
+    }
+    
+    // Clicked a card that was unselected
+    else if (!e.target.classList.contains('winner')) {
+        e.target.classList.toggle('winner')
+        updateWins(person, buddy, keyTop, keyBottom, true)
 
     }
+    // Clicked a card that was selected
     else if (e.target.classList.contains('winner')) {
         e.target.classList.toggle('winner')
-        updateWins(personTop, personBottom, keyTop, keyBottom, false)
-
+        updateWins(person, buddy, keyTop, keyBottom, false)
     }
 
+
+
 }
-
-
 
 function updateWins(person, buddy, key, keyBuddy, selected) {
     const updatePerson = person.querySelector('.wins')
@@ -114,6 +138,62 @@ function updateWins(person, buddy, key, keyBuddy, selected) {
 }
 
 
+function handleTie(person, buddy, key, keyBuddy, tie) {
+
+    if (tie) {
+        const personLosses = person.querySelector('.losses')
+        const buddyWins = buddy.querySelector('.wins')
+        const personTies = person.querySelector('.ties')
+        const buddyTies = buddy.querySelector('.ties')
+    
+        losses[key] -= 1
+        wins[keyBuddy] -= 1
+        ties[key] += 0.5
+        ties[keyBuddy] += 0.5
+        
+        personLosses.textContent = `${losses[key]}`
+        buddyWins.textContent = `${wins[keyBuddy]}`
+        personTies.textContent = `${ties[key]}`
+        buddyTies.textContent = `${ties[keyBuddy]}`
+
+    }
+    
+    else {
+        const personLosses = person.querySelector('.losses')
+        const buddyWins = buddy.querySelector('.wins')
+        const personTies = person.querySelector('.ties')
+        const buddyTies = buddy.querySelector('.ties')
+    
+        losses[key] += 1
+        wins[keyBuddy] += 1
+        ties[key] -= 0.5
+        ties[keyBuddy] -= 0.5
+        
+        personLosses.textContent = `${losses[key]}`
+        buddyWins.textContent = `${wins[keyBuddy]}`
+        personTies.textContent = `${ties[key]}`
+        buddyTies.textContent = `${ties[keyBuddy]}`
+    }
+}
+
+
+
+
+function checkTie(person, key, buddy, keyBuddy, selected) {
+
+    person.classList.toggle('tie')
+    buddy.classList.toggle('tie')
+    if (selected) {
+        crossTableData[`${names[`${key}`]}`].push('0.5')
+        crossTableData[`${names[`${keyBuddy}`]}`].push('0.5')
+    }
+
+
+
+
+        
+
+}
 
 function cardDisplay(player) {
     let key = `${player.classList.item(2)}`
@@ -123,26 +203,43 @@ function cardDisplay(player) {
     const winCount = document.createElement('div')
     const losebox = document.createElement('div')
     const lossCount = document.createElement('div')
+    const tiebox = document.createElement('div')
+    const tieCount = document.createElement('div')
 
     name.addEventListener('click', e => e.stopPropagation())
     winbox.addEventListener('click', e => e.stopPropagation())
+    winCount.addEventListener('click', e => e.stopPropagation())
     losebox.addEventListener('click', e => e.stopPropagation())
+    lossCount.addEventListener('click', e => e.stopPropagation())
+    tiebox.addEventListener('click', e => e.stopPropagation())
+    tieCount.addEventListener('click', e => e.stopPropagation())
 
 
+    winbox.style.cssText = "pointer-events: none;"
+    losebox.style.cssText = "pointer-events: none;"
+    winCount.style.cssText = "pointer-events: none;"
+    lossCount.style.cssText = "pointer-events: none;"
+    score.style.cssText = "pointer-events: none;"
+    tiebox.style.cssText = "pointer-events: none;"
+    tieCount.style.cssText = "pointer-events: none;"
 
 
     name.className = 'name'
     winCount.className = 'wins'
     lossCount.className = 'losses'
+    tieCount.className = 'ties'
 
     score.style.cssText = "display: flex; justify-content: space-around; align-items: center; width: 100%;"
     winbox.style.cssText = "display: flex; justify-content: center; flex-direction: column; align-items: center; font-size: 12px"
     losebox.style.cssText = "display: flex; justify-content: center; flex-direction: column; align-items: center; font-size: 12px"
+    tiebox.style.cssText = "display: flex; justify-content: center; flex-direction: column; align-items: center; font-size: 12px"
 
     winbox.textContent = "WINS"
     winCount.textContent = wins[`${key}`]
-    losebox.textContent = "LOSSES"
+    losebox.textContent = "LOSS"
     lossCount.textContent = losses[`${key}`]
+    tiebox.textContent = "DRAW"
+    tieCount.textContent = ties[`${key}`]
 
 
     name.textContent = names[key]
@@ -150,10 +247,14 @@ function cardDisplay(player) {
 
     player.appendChild(name)
 
+
     winbox.appendChild(winCount)
     losebox.appendChild(lossCount)
+    tiebox.appendChild(tieCount)
+
 
     score.append(winbox)
+    score.append(tiebox)
     score.append(losebox)
 
     player.appendChild(score)
@@ -166,23 +267,40 @@ function cardDisplay(player) {
 
 function roundDisplay(roundNum) {
 
+    console.log(crossTableData)
+
     toggleRound()
 
     let nextRoundBtn = document.getElementById('next')
+
     if (roundNum == (Object.keys(names).length - 1)){
         nextRoundBtn = document.createElement('button')
         nextRoundBtn.classList.add('statButton')
         nextRoundBtn.addEventListener('click', endScreen)
         nextRoundBtn.textContent = "⬇"
     }
+
     const title = document.createElement('div')
+    const whiteTitle = document.createElement('div')
+    const blackTitle = document.createElement('div')
     const round = document.createElement('section')
+
+    whiteTitle.className = "white"
+    blackTitle.className = "black"
+
+    whiteTitle.textContent = "WHITE"
+    blackTitle.textContent = "BLACK"
+
     title.className = "roundTitle"
     title.textContent = `ROUND ${roundNum}`
+
     round.classList.add('round', 'background')
     round.setAttribute('id', 'current')
+
     round.appendChild(nextRoundBtn)
     round.appendChild(title)
+    round.appendChild(whiteTitle)
+
 
     for (let match = 0; match < Players / 2; match++) {
         const pOne = document.createElement('div')
@@ -207,14 +325,11 @@ function roundDisplay(roundNum) {
 
         cardDisplay(pTwo)
         cardDisplay(pOne)
-        copy.push(pOne, pTwo)
-
 
     }
-
-    randomBackground(round)
+    round.appendChild(blackTitle)
     document.body.appendChild(round)
-
+    randomBackground(round)
     nextPage()
 }
 
@@ -326,16 +441,30 @@ function toggleRound() {
 function handleSubmit(event) {
     event.preventDefault()
     const userInput = document.getElementById('myInput');
+    const playerList = document.createElement('div')
+
     names[`${playerCount}`] = `${userInput.value.toUpperCase()}`
     wins[`${playerCount}`] = 0
-    losses[`${playerCount++}`] = 0
-    const playerList = document.createElement('div')
+    losses[`${playerCount}`] = 0
+    ties[`${playerCount++}`] = 0
+    crossTableData[`${userInput.value.toUpperCase()}`] = []
+
     playerList.classList.add('listPlayer')
     playerList.addEventListener('click', removePlayer)
     playerList.textContent = `${userInput.value}`
+
+
+
     list.appendChild(playerList)
     userInput.value = ''
+
+
+
     switch(Object.keys(names).length) {
+        case 4:
+            Players = Object.keys(names).length
+            game = fourGame
+            break;
         case 6:
             Players = Object.keys(names).length
             game = sixGame
@@ -372,7 +501,6 @@ function handleSubmit(event) {
 
 
 
-
 function randomBackground(page) {
     const backgroundImageList = [
         'imgs/nocolorcat.jpeg',
@@ -382,7 +510,8 @@ function randomBackground(page) {
       ]
     
 
-    const randomImageIndex = Math.floor(Math.random() * backgroundImageList.length);
-    const randomBackgroundImage = `url(${backgroundImageList[randomImageIndex]})`;
-    page.style.backgroundImage = randomBackgroundImage;
+    const randomImageIndex = Math.floor(Math.random() * backgroundImageList.length)
+    const randomBackgroundImage = `url(${backgroundImageList[randomImageIndex]})`
+    page.style.backgroundImage = randomBackgroundImage
 }
+

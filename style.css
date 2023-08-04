@@ -11,8 +11,6 @@ html {
     height: 100%;
 }
 
-
-
 section {
     scroll-snap-align: start;
     flex-wrap: wrap;
@@ -33,8 +31,6 @@ section {
     background-color: #f2f2f2;
 }
 
-
-
 .opener .title {
     font-size: 100px;
     position: absolute;
@@ -45,26 +41,117 @@ section {
 
 }
 
+.inputWrapper {
+    width: 200px;
+    padding: 15px 20px 15px 10px;
+    background: white;
+    background: transparent;
+    box-shadow: 1px 10px 50px black;
+    backdrop-filter: blur(3px);
+    border-radius: 7px;
 
+}
 
-input {
-    border: none;
+.inputWrapper .input-data {
     height: 40px;
+    width: 100%;
+    position: relative;
+}
+
+.inputWrapper .input-data input {
+    border: none;
+    height: 100%;
+    width: 100%;
     font-size: 17px;
     font-weight: 0;
-    padding: 0px 10px;
-    border-radius: 10px 10px;
-    border: 1px solid white;
+    line-height: 1;
+    color: white;
     background: transparent;
+    line-height: 100;
+    transform: translateY(5px);
+
+}
+
+.inputWrapper .input-data label {
+    position: absolute;
+    left: 36%;
+    font-size: 20px;
+    bottom: 10px;
+    transition: all 0.3s ease;
+    color: white;
+    pointer-events: none;
 }
 
 input:focus {
-    border: 2px dotted black;
     outline: none;
 }
 
+input:active ~ label{
+    transform: translateY(-20px);
+    font-size: 17px;
+    color: #4158d0;
+}
 
+.input-data input:focus ~ label {
+    transform: translateY(-20px);
+    font-size: 17px;
+    color: black;
+}
 
+.inputWrapper .input-data .underline {
+    position: absolute;
+    bottom: -4px;
+    height: 2px;
+    width: 105%;
+}
+
+.input-data .underline::before {
+    position: absolute;
+    content: "";
+    height: 100%;
+    width: 100%;
+    background: black;
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.input-data input:focus ~ .underline::before{
+    transform: scaleX(1);
+    color: #4158d0;
+}
+
+.listPlayer {
+    height: 40px;
+    width: 170px;
+    color: white;
+    display: flex;
+    font-size: large;
+    font-weight: 100;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 1px 10px 50px black;
+    backdrop-filter: blur(3px);
+}
+
+#list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    height: 30%;
+    width: 50%;
+    gap: 5px;
+
+}
+
+.roundTitle {
+    font-size: 40px;
+    position: absolute;
+    color: white;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 90vh;
+}
 
 .round {
     height: 100vh;
@@ -76,6 +163,24 @@ input:focus {
     gap: 30px;
     scroll-snap-align: start;
     background-size: cover;
+}
+
+.white {
+    font-size: 40px;
+    position: absolute;
+    color: white;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 70vh;
+}
+
+.black {
+    font-size: 40px;
+    position: absolute;
+    color: black;
+    margin: 0;
+    padding: 0;
+    margin-top: 70vh;
 }
 
 .card {
@@ -104,38 +209,18 @@ input:focus {
     color: black;
 }
 
+.card.tie {
+    transform: scale(1.15);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    background-color: rgba(125, 125, 125, 0.75);
+    color: black;
+}
 
 .matchBox {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-
-
-.listPlayer {
-    height: 40px;
-    width: 170px;
-    color: white;
-    display: flex;
-    font-size: large;
-    font-weight: 100;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 1px 10px 50px black;
-    backdrop-filter: blur(3px);
-}
-
-#list {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    height: 30%;
-    width: 50%;
-    gap: 5px;
-
-}
-
 
 button#next,
 .statButton {
@@ -152,15 +237,17 @@ button#next,
     justify-content: center;
     align-items: center;
     transition: transform .1s ease;
+    box-shadow: 1px 10px 50px black;
+
+    
 }
 
 button#next:hover,
 .statButton {
     transform: scale(1.1);
-    box-shadow: inset 10px 10px 30px black;
+    box-shadow: 1px 10px 50px black;
+    backdrop-filter: blur(3px);
 }
-
-
 
 .wrapper {
     flex-wrap: wrap;
@@ -176,7 +263,13 @@ button#next:hover,
     gap: 0;
 }
 
-
+.statTitle {
+    font-size: 100px;
+    position: absolute;
+    color: white;
+    margin: 0;
+    padding: 0;
+}
 
 .statCard {
     display: flex;
@@ -196,9 +289,17 @@ button#next:hover,
 
 }
 
+.statBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    height: 80%;
+    width: 50%;
+}
+
 .statBackground {
     background-image: url('./imgs/cat.jpeg');
-    background-size: cover;
     
 }
 
@@ -212,29 +313,5 @@ button#next:hover,
     background-position: 50% 50%;
 }
 
-.statBox {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    height: 80%;
-    width: 50%;
-}
 
-.statTitle {
-    font-size: 100px;
-    position: absolute;
-    color: white;
-    margin: 0;
-    padding: 0;
-}
-
-.roundTitle {
-    font-size: 40px;
-    position: absolute;
-    color: white;
-    margin: 0;
-    padding: 0;
-    margin-bottom: 90vh;
-}
 
