@@ -199,6 +199,10 @@ input:active ~ label{
     border-radius: 5px;
 }
 
+.BYE {
+    background-color: rgba(116, 29, 29, 0.75);
+}
+
 .card:hover {
     transform: scale(1.15);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
