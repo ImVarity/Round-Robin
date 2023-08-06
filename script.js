@@ -132,13 +132,15 @@ function roundDisplay(roundNum) {
         
         if (names[pOnekey] == 'BYE'){
             pOne.removeEventListener("click", setWinner);
+            pTwo.removeEventListener('click', setWinner)
             pOne.classList.add('BYE')
             cardDisplay(pTwo)
             cardDisplayBye(pOne)
         }
             
         else if (names[pTwokey] == 'BYE'){
-            pTwo.removeEventListener("click", setWinner);
+            pTwo.removeEventListener('click', setWinner);
+            pOne.removeEventListener('click', setWinner)
             pTwo.classList.add('BYE')
             cardDisplay(pOne)
             cardDisplayBye(pTwo)
@@ -286,69 +288,72 @@ function endScreen() {
     statBox.className = "statBox"
     const title = document.createElement('div')
     title.className = "statTitle"
-    title.textContent = "STATISTICS"
+    title.textContent = "Podium"
 
-    let winner = []
-    let winCount = 0
-    let lossCount;
+
+    let winners = []
 
     for (let key = 1; key <= Players; key++) {
-        let nameText = names[`${key}`]
+
         let winsText = wins[`${key}`]
-        let lossesText = losses[`${key}`]
+        winners.push(`${winsText}`)
+
+
+    }
+
+
+    let topThree = calculatePositionTopThree(winners)
+    adjustPosition(topThree)
+    let goldKey = topThree.indexOf(1) + 1
+    let silverKey = topThree.indexOf(2) + 1
+    let bronzeKey = topThree.indexOf(3) + 1
+
+
+    const podiumKeys = [bronzeKey, goldKey, silverKey]
+
+
+    for (let key = 0; key < 3; key++) {
+
+        let nameText = names[`${podiumKeys[key]}`]
+        let winsText = wins[`${podiumKeys[key]}`]
+        let lossesText = losses[`${podiumKeys[key]}`]
+        let tiesText = ties[`${podiumKeys[key]}`]
+
 
         const card = document.createElement('div')
-        const crown = document.createElement('div')
         const playerName = document.createElement('div')
         const playerWins = document.createElement('div')
         const playerLosses = document.createElement('div')
+        const playerTies = document.createElement('div')
 
 
         playerName.textContent = `${nameText}`
         playerWins.textContent = `${winsText}`
         playerLosses.textContent = `${lossesText}`
+        playerTies.textContent = `${tiesText}`
 
+        if (key == 1)
+            card.style.cssText = "margin-bottom: 200px"
+        if (key == 2)
+            card.style.cssText = "margin-bottom: 100px"
 
         playerWins.style.cssText = "color: gold;"
         playerLosses.style.cssText = "color: red;"
+        playerTies.style.cssText = "color: green;"
 
         card.classList.add('statCard')
 
-
-        if (winsText > winCount) {
-            winCount = winsText
-            lossCount = lossesText
-            if (winner.length > 0) {
-                const current = statBox.querySelector('.crown')
-                current.classList.remove('crown')
-            }
-            winner = []
-            crown.classList.add('crown')
-            winner.push(card)
-        }
-        else if (winsText == winCount) {
-            if (lossesText > lossCount) {
-                if (winner.length > 0) {
-                    const current = statBox.querySelector('.crown')
-                    current.classList.remove('crown')
-                }
-                winner = []
-                crown.classList.add('crown')
-                winner.push(card)
-            }
-        }
-
-
-
-        card.appendChild(crown)
         card.appendChild(playerName)
         card.appendChild(playerWins)
         card.appendChild(playerLosses)
+        card.appendChild(playerTies)
         
 
         statBox.appendChild(card)
 
     }
+
+
     endScreen.appendChild(title)
     endScreen.appendChild(statBox)
     document.body.insertBefore(endScreen, container)
@@ -682,6 +687,9 @@ function createTable() {
         total.textContent = `${calculateTotal(i)}`
 
         const positions = calculatePosition()
+        
+        // Remove if want duplicate positions
+        adjustPosition(positions)
 
         
         position.className = 'statPosition'
@@ -739,6 +747,57 @@ function calculatePosition() {
 }
 
 
+
+function calculatePositionTopThree(list) {
+    let positions = []
+    let match = []
+
+    for (let i = 0; i < Players; i++) {
+        positions.push(list[i])
+        match.push(list[i])
+        
+    }
+
+    positions.sort((a, b) => b - a)
+
+    for (let i = 0; i < Players; i++) {
+        match[i] = positions.indexOf(match[i]) + 1
+    }
+
+    return match
+}
+
+
+
+function adjustPosition(list) {
+
+    let copy = JSON.parse(JSON.stringify(list))
+    copy.sort()
+    let duplicates = {}
+
+
+    for (i = 1; i <= list.length; i++) {
+        duplicates[`${[i]}`] = []
+    }
+
+    for (i = 1; i <= list.length; i++) {
+        if (copy[i] == copy[i - 1]) {  
+            if (duplicates[`${copy[i]}`].length > 0)
+                duplicates[`${copy[i]}`].push(duplicates[`${copy[i]}`][duplicates[`${copy[i]}`].length - 1] + 1)
+            else
+                duplicates[`${copy[i]}`].push(copy[i] + 1)
+        }
+    }
+
+    for (i = 1; i <= list.length; i++) {
+        if (duplicates[i].length > 0) {
+            for (const num of duplicates[i]) {
+                list[list.indexOf(i)] = num
+            }
+        }
+    }
+
+}
 
 // PLAYER SUBMISSION FUNCTIONS
 

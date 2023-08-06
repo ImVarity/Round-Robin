@@ -272,6 +272,7 @@ button#next:hover,
 .statTitle {
     font-size: 100px;
     position: absolute;
+    bottom: 85vh;
     color: white;
     margin: 0;
     padding: 0;
@@ -302,9 +303,11 @@ button#next:hover,
     flex-wrap: wrap;
     height: 80%;
     width: 50%;
+
 }
 
 .statBackground {
+    position: relative;
     background-image: url('./imgs/cat.jpeg');
     
 }
