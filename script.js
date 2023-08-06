@@ -385,9 +385,17 @@ function allowPassage(round) {
 
     if (minToPass >= Players / 2){
         if (currentRound == Players -1)
+        {
+            lockCards()
             endScreen()
+        }
+            
         else
+        {
+            lockCards()
             roundDisplay(++currentRound)
+        }
+            
     }
         
     
@@ -406,6 +414,15 @@ function toggleRound() {
 
 
 
+}
+
+
+
+function lockCards() {
+
+    const cards = document.querySelectorAll('.card')
+    cards.forEach(card => card.removeEventListener('click', setWinner))
+    
 }
 
 
