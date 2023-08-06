@@ -78,7 +78,8 @@ function roundDisplay(roundNum) {
     checkOddPlayers()
     fillTableData()
     toggleRound()
-
+    
+    arrow.remove()
 
     const passArrow = document.createElement('button')
     const title = document.createElement('div')
@@ -373,6 +374,7 @@ function nextPage() {
 function allowPassage(round) {
 
     const matches = round.querySelectorAll('.matchBox')
+    const deleteBtn = round.querySelector('.statButton')
 
     let minToPass = 0
 
@@ -389,23 +391,18 @@ function allowPassage(round) {
 
 
     if (minToPass >= Players / 2){
-        if (currentRound == Players -1)
-        {
+        if (currentRound == Players -1) {
+            deleteBtn.remove()
             lockCards()
             endScreen()
-        }
-            
-        else
-        {
+        }    
+        else {
+            deleteBtn.remove()
             lockCards()
             roundDisplay(++currentRound)
         }
             
     }
-        
-    
-
-
 }
 
 
