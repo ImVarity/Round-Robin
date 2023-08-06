@@ -61,13 +61,13 @@ const body = document.querySelector('body')
 const form = document.querySelector('form')
 const arrow = document.getElementById('next')
 
+
 document.body.appendChild(container)
 
 
 
 form.onsubmit = () => handleSubmit(event)
 arrow.addEventListener('click', () => roundDisplay(currentRound))
-
 
 
 
@@ -79,19 +79,15 @@ function roundDisplay(roundNum) {
     fillTableData()
     toggleRound()
 
-    let nextRoundBtn = document.getElementById('next')
 
-    if (roundNum == (Object.keys(names).length - 1)){
-        nextRoundBtn = document.createElement('button')
-        nextRoundBtn.classList.add('statButton')
-        nextRoundBtn.addEventListener('click', endScreen)
-        nextRoundBtn.textContent = "⬇"
-    }
-
+    const passArrow = document.createElement('button')
     const title = document.createElement('div')
     const whiteTitle = document.createElement('div')
     const blackTitle = document.createElement('div')
     const round = document.createElement('section')
+    
+    passArrow.classList.add('statButton')
+    passArrow.textContent = "⬇"
 
     whiteTitle.className = "white"
     blackTitle.className = "black"
@@ -105,7 +101,7 @@ function roundDisplay(roundNum) {
     round.classList.add('round', 'background')
     round.setAttribute('id', 'current')
 
-    round.appendChild(nextRoundBtn)
+    round.appendChild(passArrow)
     round.appendChild(title)
     round.appendChild(whiteTitle)
 
@@ -133,10 +129,6 @@ function roundDisplay(roundNum) {
         matchBox.appendChild(vs)
         matchBox.appendChild(pTwo)
         round.append(matchBox)
-
-        console.log(names[pOnekey])
-        console.log(names[pTwokey])
-        console.log("D")
         
         if (names[pOnekey] == 'BYE'){
             pOne.removeEventListener("click", setWinner);
@@ -157,10 +149,6 @@ function roundDisplay(roundNum) {
             cardDisplay(pTwo)
         }
             
-        
-
-        
-
 
         if (pTwo.classList.contains('BYE')) {
             pOne.classList.add('winner')
@@ -175,8 +163,8 @@ function roundDisplay(roundNum) {
 
 
     }
+    passArrow.addEventListener('click', () => allowPassage(round))
     round.appendChild(blackTitle)
-
     document.body.insertBefore(round, container)
     randomBackground(round)
     nextPage()
@@ -373,8 +361,38 @@ function endScreen() {
 function nextPage() {
     const current = document.getElementById('current')
     current.scrollIntoView({behavior: 'smooth'})
-    currentRound++
+}
+
+
+
+function allowPassage(round) {
+
+    const matches = round.querySelectorAll('.matchBox')
+
+    let minToPass = 0
+
+    for (let i = 0; i < matches.length; i++) {
+
+        let match = matches[i]
+        
+        const cards = match.querySelectorAll('.card')
+        
+        if (cards[0].classList.contains('winner') || cards[1].classList.contains('winner'))
+            minToPass++
+
+    }
+
+
+    if (minToPass >= Players / 2){
+        if (currentRound == Players -1)
+            endScreen()
+        else
+            roundDisplay(++currentRound)
+    }
+        
     
+
+
 }
 
 
@@ -643,7 +661,6 @@ function createTable() {
         const total = document.createElement('div')
         const position = document.createElement('div')
 
-        console.log(Players)
         total.className = 'statTotal'
         total.textContent = `${calculateTotal(i)}`
 

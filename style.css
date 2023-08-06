@@ -243,13 +243,13 @@ button#next,
     justify-content: center;
     align-items: center;
     transition: transform .1s ease;
-    box-shadow: 1px 10px 50px black;
+    box-shadow: 1px -10px 50px black;
 
     
 }
 
 button#next:hover,
-.statButton {
+.statButton:hover {
     transform: scale(1.1);
     box-shadow: 1px 10px 50px black;
     backdrop-filter: blur(3px);
