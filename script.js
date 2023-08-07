@@ -3,12 +3,16 @@ wins = {}
 losses = {}
 ties = {}
 
+
+
 let game;
 let tableDataGrid;
+let loc;
 let Players;
 let playerCount = 1
 let currentRound = 1
 let totalRounds = Players - 1
+
 
 
 // GAMES
@@ -47,26 +51,55 @@ tenGame = {
     
     
 }
+twelveGame = {
+    "round1":  [['1' , '12'], ['2', '11'], ['3', '10'], ['4', '9' ], ['5', '8' ], ['6', '7'  ]],
+    "round2":  [['12', '7' ], ['8', '6' ], ['9', '5' ], ['10', '4'], ['11', '3'], ['1', '2'  ]],
+    "round3":  [['2' , '12'], ['3', '1' ], ['4', '11'], ['5', '10'], ['6', '9' ], ['7', '8'  ]],
+    "round4":  [['12', '8' ], ['9', '7' ], ['10', '6'], ['11', '5'], ['1', '4' ], ['2', '3'  ]],
+    "round5":  [['3' , '12'], ['4', '2' ], ['5', '1' ], ['6', '11'], ['7', '10'], ['8', '9'  ]],
+    "round6":  [['12', '9' ], ['10', '8'], ['11', '7'], ['1', '6' ], ['2', '5' ], ['3', '4'  ]],
+    "round7":  [['4' , '12'], ['5', '3' ], ['6', '2' ], ['7', '1' ], ['8', '11'], ['9', '10' ]],
+    "round8":  [['12', '10'], ['11', '9'], ['1', '8' ], ['2', '7' ], ['3', '6' ], ['4', '5'  ]],
+    "round9":  [['5' , '12'], ['6', '4' ], ['7', '3' ], ['8', '2' ], ['9', '1' ], ['10', '11']],
+    "round10": [['12', '11'], ['1', '10'], ['2', '9' ], ['3', '8' ], ['4', '7' ], ['5', '6'  ]],
+    "round11": [['6' , '12'], ['7', '5' ], ['8', '4' ], ['9', '3' ], ['10', '2'], ['11', '1' ]]
 
+}
+fourteenGame = {
+    "round1":   [['1' , '14' ], ['2', '13' ], ['3', '12'], ['4', '11'], ['5', '10'], ['6', '9'  ], ['7', '8'  ]],
+    "round2":   [['14' , '8' ], ['9', '7'  ], ['10', '6'], ['11', '5'], ['12', '4'], ['13', '3' ], ['1', '2'  ]],
+    "round3":   [['2' , '14' ], ['3', '1'  ], ['4', '13'], ['5', '12'], ['6', '11'], ['7', '10' ], ['8', '9'  ]],
+    "round4":   [['14' , '9' ], ['10', '8' ], ['11', '7'], ['12', '6'], ['13', '5'], ['1', '4'  ], ['2', '3'  ]],
+    "round5":   [['3' , '14' ], ['4', '2'  ], ['5', '1' ], ['6', '13'], ['7', '12'], ['8', '11' ], ['9', '10' ]],
+    "round6":   [['14' , '10'], ['11', '9' ], ['12', '8'], ['13', '7'], ['1', '6' ], ['2', '5'  ], ['3', '4'  ]],
+    "round7":   [['4' , '14' ], ['5', '3'  ], ['6', '2' ], ['7', '1' ], ['8', '13'], ['9', '12' ], ['10', '11']],
+    "round8":   [['14' , '11'], ['12', '10'], ['13', '9'], ['1', '8' ], ['2', '7' ], ['3', '6'  ], ['4', '5'  ]],
+    "round9":   [['5' , '14' ], ['6', '4'  ], ['7', '3' ], ['8', '2' ], ['9', '1' ], ['10', '13'], ['11', '12']],
+    "round10":  [['14' , '12'], ['13', '11'], ['1', '10'], ['2', '9' ], ['3', '8' ], ['4', '7'  ], ['5', '6'  ]],
+    "round11":  [['6' , '14' ], ['7', '5'  ], ['8', '4' ], ['9', '3' ], ['10', '2'], ['11', '1' ], ['12', '13']],
+    "round12":  [['14' , '13'], ['1', '12' ], ['2', '11'], ['3', '10'], ['4', '9' ], ['5', '8'  ], ['6', '7'  ]],
+    "round13":  [['7' , '14' ], ['8', '6'  ], ['9', '5' ], ['10', '4'], ['11', '3'], ['12', '2' ], ['13', '1' ]],
 
-
+}
 
 const container = document.querySelector('.container')
-const statContainer = document.createElement('div')
-statContainer.className = 'statContainer'
+const statContainer = document.querySelector('.statContainer')
+const timeloc = document.querySelector('.date-loc')
+const date = document.querySelector('.date')
+
+const currentDate = new Date().toISOString().slice(0, 10)
+date.textContent = currentDate
 
 
-
-const body = document.querySelector('body')
-const form = document.querySelector('form')
 const arrow = document.getElementById('next')
-
-
-document.body.appendChild(container)
+const body = document.querySelector('body')
+const form = document.querySelector('.input-data')
+const place = document.querySelector('.locationForm')
 
 
 
 form.onsubmit = () => handleSubmit(event)
+place.onsubmit = () => handleSubmitLocation(event)
 arrow.addEventListener('click', () => roundDisplay(currentRound))
 
 
@@ -78,7 +111,7 @@ function roundDisplay(roundNum) {
     checkOddPlayers()
     fillTableData()
     toggleRound()
-    
+
     arrow.remove()
 
     const passArrow = document.createElement('button')
@@ -146,13 +179,11 @@ function roundDisplay(roundNum) {
             cardDisplay(pOne)
             cardDisplayBye(pTwo)
         }
-
         else {
             cardDisplay(pOne)
             cardDisplay(pTwo)
         }
             
-
         if (pTwo.classList.contains('BYE')) {
             pOne.classList.add('winner')
             updateWins(pOne, pTwo, pOnekey, pTwokey, true)
@@ -162,8 +193,6 @@ function roundDisplay(roundNum) {
             pTwo.classList.add('winner')
             updateWins(pTwo, pOne, pTwo.classList.item(2), pOne.classList.item(2), true)
         }
-            
-
 
     }
     passArrow.addEventListener('click', () => allowPassage(round))
@@ -185,15 +214,6 @@ function cardDisplay(player) {
     const lossCount = document.createElement('div')
     const tiebox = document.createElement('div')
     const tieCount = document.createElement('div')
-
-    name.addEventListener('click', e => e.stopPropagation())
-    winbox.addEventListener('click', e => e.stopPropagation())
-    winCount.addEventListener('click', e => e.stopPropagation())
-    losebox.addEventListener('click', e => e.stopPropagation())
-    lossCount.addEventListener('click', e => e.stopPropagation())
-    tiebox.addEventListener('click', e => e.stopPropagation())
-    tieCount.addEventListener('click', e => e.stopPropagation())
-
 
     winbox.style.cssText = "pointer-events: none;"
     losebox.style.cssText = "pointer-events: none;"
@@ -299,9 +319,7 @@ function endScreen() {
         let winsText = wins[`${key}`]
         winners.push(`${winsText}`)
 
-
     }
-
 
     let topThree = calculatePositionTopThree(winners)
     adjustPosition(topThree)
@@ -309,9 +327,7 @@ function endScreen() {
     let silverKey = topThree.indexOf(2) + 1
     let bronzeKey = topThree.indexOf(3) + 1
 
-
     const podiumKeys = [bronzeKey, goldKey, silverKey]
-
 
     for (let key = 0; key < 3; key++) {
 
@@ -333,10 +349,15 @@ function endScreen() {
         playerLosses.textContent = `${lossesText}`
         playerTies.textContent = `${tiesText}`
 
-        if (key == 1)
-            card.style.cssText = "margin-bottom: 200px"
+        if (key == 1){
+            card.style.cssText = "margin-bottom: 300px"
+            const crown = document.createElement('div')
+            crown.className = "crown"
+            card.appendChild(crown)
+
+        }
         if (key == 2)
-            card.style.cssText = "margin-bottom: 100px"
+            card.style.cssText = "margin-bottom: 150px"
 
         playerWins.style.cssText = "color: gold;"
         playerLosses.style.cssText = "color: red;"
@@ -344,10 +365,11 @@ function endScreen() {
 
         card.classList.add('statCard')
 
+        // Add if want scores under podium cards
         card.appendChild(playerName)
-        card.appendChild(playerWins)
-        card.appendChild(playerLosses)
-        card.appendChild(playerTies)
+        // card.appendChild(playerWins)
+        // card.appendChild(playerLosses)
+        // card.appendChild(playerTies)
         
 
         statBox.appendChild(card)
@@ -381,14 +403,12 @@ function allowPassage(round) {
     for (let i = 0; i < matches.length; i++) {
 
         let match = matches[i]
-        
         const cards = match.querySelectorAll('.card')
         
         if (cards[0].classList.contains('winner') || cards[1].classList.contains('winner'))
             minToPass++
 
     }
-
 
     if (minToPass >= Players / 2){
         if (currentRound == Players -1) {
@@ -414,17 +434,13 @@ function toggleRound() {
             round.removeAttribute('id');
     })
 
-
-
 }
 
 
 
 function lockCards() {
-
     const cards = document.querySelectorAll('.card')
     cards.forEach(card => card.removeEventListener('click', setWinner))
-    
 }
 
 
@@ -433,44 +449,33 @@ function lockCards() {
 
 function setWinner(e) {
 
-    let person;
+    let person = this
     let buddy;
 
-    if (e.target.classList.item(1) == 'top')
-    {
-        person = e.target
-        buddy = e.target.nextSibling.nextSibling
-    }
-    else if (e.target.classList.item(1) == 'bottom')
-    {
-        person = e.target
-        buddy = e.target.previousSibling.previousSibling
-    }
+    if (this.classList.item(1) == 'top')
+        buddy = this.nextSibling.nextSibling
+    else if (this.classList.item(1) == 'bottom') 
+        buddy = person.previousSibling.previousSibling
 
-    let key = `${person.classList.item(2)}`
+    let key = `${this.classList.item(2)}`
     let keyBuddy =`${buddy.classList.item(2)}`
 
     // Clicked a card which created a tie
-    if ((!person.classList.contains('winner') && buddy.classList.contains('winner'))){
-        e.target.classList.toggle('winner')
+    if ((!person.classList.contains('winner') && buddy.classList.contains('winner')))
         handleTie(person, buddy, key, keyBuddy, true)
-    }
 
     // Already was a tie and unclicked a clard
-    else if ((person.classList.contains('tie') && buddy.classList.contains('tie'))) {
-        e.target.classList.toggle('winner')
+    else if ((person.classList.contains('tie') && buddy.classList.contains('tie')))
         handleTie(person, buddy, key, keyBuddy, false)
-    }
     
     // Clicked a card that was unselected
-    else if (!e.target.classList.contains('winner')) {
-        e.target.classList.toggle('winner')
+    else if (!this.classList.contains('winner')) {
+        this.classList.toggle('winner')
         updateWins(person, buddy, key, keyBuddy, true)
-
     }
     // Clicked a card that was selected
-    else if (e.target.classList.contains('winner')) {
-        e.target.classList.toggle('winner')
+    else if (this.classList.contains('winner')) {
+        this.classList.toggle('winner')
         updateWins(person, buddy, key, keyBuddy, false)
     }
 
@@ -481,29 +486,26 @@ function setWinner(e) {
 
 
 function updateWins(person, buddy, key, keyBuddy, selected) {
+    
     const updatePerson = person.querySelector('.wins')
     const updateBuddy = buddy.querySelector('.losses')
-    if (selected)
-    {
+    if (selected) {
         wins[key] += 1
         losses[keyBuddy] += 1
     }
-    else
-    {
+    else {
         wins[key] -= 1
         losses[keyBuddy] -= 1
     }
     
     updatePerson.textContent = `${wins[key]}`
     updateBuddy.textContent = `${losses[keyBuddy]}`
-
-    
 }
 
 
 
 function handleTie(person, buddy, key, keyBuddy, tie) {
-
+    person.classList.toggle('winner')
     person.classList.toggle('tie')
     buddy.classList.toggle('tie')
 
@@ -514,12 +516,10 @@ function handleTie(person, buddy, key, keyBuddy, tie) {
 
     if (tie) {
 
-    
         losses[key] -= 1
         wins[keyBuddy] -= 1
         ties[key] += 0.5
         ties[keyBuddy] += 0.5
-
     }
     
     else {
@@ -529,6 +529,7 @@ function handleTie(person, buddy, key, keyBuddy, tie) {
         ties[key] -= 0.5
         ties[keyBuddy] -= 0.5
     }
+
     personLosses.textContent = `${losses[key]}`
     buddyWins.textContent = `${wins[keyBuddy]}`
     personTies.textContent = `${ties[key]}`
@@ -541,9 +542,7 @@ function handleTie(person, buddy, key, keyBuddy, tie) {
 
 function fillTableData() {
 
-
     const matches = document.querySelectorAll('.matchBox')
-
 
     for (let i = Math.abs(matches.length - Players / 2); i < matches.length; i++) {
 
@@ -551,11 +550,8 @@ function fillTableData() {
         
         const cards = match.querySelectorAll('.card')
         
-
-
         let person = cards[0]
         let buddy = cards[1]
-
 
         const personKey = person.classList.item(2)
         const buddyKey = buddy.classList.item(2)
@@ -576,13 +572,11 @@ function fillTableData() {
             buddyScore = '1'
         }
 
-
         tableDataGrid[+personKey - 1][+buddyKey - 1] = personScore
         tableDataGrid[+buddyKey - 1][+personKey - 1] = buddyScore
 
     }
     createTable()
-
 
 }
 
@@ -609,6 +603,8 @@ function createTableHeader() {
     const playerHeader = document.createElement('div')
     const totalHeader = document.createElement('div')
     const positionHeader = document.createElement('div')
+
+
 
     header.className = 'row'
     empty.className = 'statNumber'
@@ -645,7 +641,6 @@ function createTable() {
 
     statContainer.innerHTML = ''
 
-
     createTableHeader()
 
     for (let i = 0; i < Players; i++) {
@@ -654,13 +649,11 @@ function createTable() {
         const name = document.createElement('div')
         const row = document.createElement('div')
 
-
         number.className = 'statNumber'
         number.textContent = `${i + 1}`
 
         name.className = 'statName'
         name.textContent = `${names[`${i + 1}`]}`
-        
         
         row.className = "row"
 
@@ -686,11 +679,11 @@ function createTable() {
         const positions = calculatePosition()
         
         // Remove if want duplicate positions
-        adjustPosition(positions)
+        // adjustPosition(positions)
 
         
         position.className = 'statPosition'
-        position.textContent = `${positions[i]}`
+        position.textContent = `${positionName(positions[i])}`
 
 
         row.appendChild(total)
@@ -701,15 +694,19 @@ function createTable() {
     }
     container.appendChild(statContainer)
 
-    
+}
 
+
+
+function positionName(position) {
+    const positionName = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', '10th', '11th', '12th', '13th', '14th']
+    return positionName[`${position - 1}`]
 }
 
 
 
 function calculateTotal(row) {
     let total = 0
-
 
     for (const num of tableDataGrid[row]) {
         if (num == '1/2')
@@ -772,7 +769,6 @@ function adjustPosition(list) {
     copy.sort()
     let duplicates = {}
 
-
     for (i = 1; i <= list.length; i++) {
         duplicates[`${[i]}`] = []
     }
@@ -796,6 +792,8 @@ function adjustPosition(list) {
 
 }
 
+
+
 // PLAYER SUBMISSION FUNCTIONS
 
 function handleSubmit(event) {
@@ -811,8 +809,6 @@ function handleSubmit(event) {
     playerList.classList.add('listPlayer')
     playerList.addEventListener('click', removePlayer)
     playerList.textContent = `${userInput.value}`
-
-
 
     list.appendChild(playerList)
     userInput.value = ''
@@ -857,10 +853,55 @@ function handleSubmit(event) {
             game = tenGame
             tableDataGrid = createGrid(10, 10)
             break;
+        case 11:
+            setBye()
+            Players = Object.keys(names).length + 1
+            game = twelveGame
+            tableDataGrid = createGrid(12, 12)
+            break;
+        case 12:
+            Players = Object.keys(names).length
+            game = twelveGame
+            tableDataGrid = createGrid(12, 12)
+            break;
+        case 13:
+            setBye()
+            Players = Object.keys(names).length + 1
+            game = fourteenGame
+            tableDataGrid = createGrid(14, 14)
+            break;
+        case 14:
+            Players = Object.keys(names).length
+            game = fourteenGame
+            tableDataGrid = createGrid(14, 14)
+            break;
+        
       }
 
     
 }
+
+
+
+function handleSubmitLocation(event) {
+    event.preventDefault()
+    const userInput = document.getElementById('location-input')
+    const inputWrappingLoc = document.querySelector('.inputWrapperLoc')
+    const locForm = document.querySelector('.locationForm')
+    const textReplacement = document.createElement('div')
+    const textBelow = document.createElement('div')
+    loc = `${userInput.value}`
+    textReplacement.textContent = `${userInput.value}`
+    textBelow.textContent = `${userInput.value}`
+    timeloc.style.cssText = "justify-content: space-between;"
+    locForm.innerHTML = ''
+    locForm.appendChild(textReplacement)
+    timeloc.appendChild(textBelow)
+
+    // remove if still want box
+    //inputWrappingLoc.style.cssText = "box-shadow: none; backdrop-filter: none; background: transparent;"
+}
+
 
 
 function setBye() {
@@ -888,6 +929,7 @@ function removePlayer(e) {
 }
 
 
+
 function checkOddPlayers() {
     if (Players % 2 != 0)
         Players--
@@ -900,13 +942,13 @@ function checkOddPlayers() {
 
 function randomBackground(page) {
     const backgroundImageList = [
-        'imgs/nocolorcat.jpeg',
         'imgs/catvcat.jpeg',
-        'imgs/catdog.jpeg',
-        'imgs/catstare.jpeg'
+        'imgs/catblank.jpeg',
+        'imgs/catclose.jpeg',
+        'imgs/catshort.jpeg',
+        'imgs/catsnow.jpeg'
       ]
     
-
     const randomImageIndex = Math.floor(Math.random() * backgroundImageList.length)
     const randomBackgroundImage = `url(${backgroundImageList[randomImageIndex]})`
     page.style.backgroundImage = randomBackgroundImage

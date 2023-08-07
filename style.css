@@ -9,6 +9,7 @@ html {
     scroll-snap-type: y proximity;
     overflow-y: scroll;
     height: 100%;
+
 }
 
 section {
@@ -43,19 +44,49 @@ section {
 
 }
 
+.date-loc {
+    width: 534px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.inputWrapperLoc,
 .inputWrapper {
     width: 200px;
-    padding: 15px 20px 15px 10px;
+    padding: 15px;
+    font-size: 19px;
+    color: white;
     background: white;
     background: transparent;
     box-shadow: 1px 10px 50px black;
     backdrop-filter: blur(3px);
     border-radius: 7px;
+    border: none;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#location-input {
+    font-size: 17px;
+    width: 200px; 
+    color: white;
+    width: 200px;
+    background: white;
+    background: transparent;
+    border: none;
+
 
 }
 
+.underlineLoc {
+    top: 40px;
+}
+
 .inputWrapper .input-data {
-    height: 40px;
     width: 100%;
     position: relative;
 }
@@ -70,18 +101,24 @@ section {
     color: white;
     background: transparent;
     line-height: 100;
-    transform: translateY(5px);
-
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.inputWrapper .input-data label {
+.inputWrapper .input-data label,
+.inputWrapperLoc .locationForm label {
     position: absolute;
     left: 36%;
     font-size: 20px;
-    bottom: 10px;
+    bottom: 0px;
     transition: all 0.3s ease;
     color: white;
     pointer-events: none;
+}
+
+.inputWrapperLoc .locationForm label {
+    bottom: 15px;
 }
 
 input:focus {
@@ -91,23 +128,31 @@ input:focus {
 input:active ~ label{
     transform: translateY(-20px);
     font-size: 17px;
-    color: #4158d0;
 }
 
-.input-data input:focus ~ label {
-    transform: translateY(-20px);
-    font-size: 17px;
-    color: black;
+.locationForm input:focus ~ label{
+    transform: translateX(-170px);
+}
+
+.input-data input:focus ~ label{
+    transform: translateX(-160px);
 }
 
 .inputWrapper .input-data .underline {
     position: absolute;
     bottom: -4px;
     height: 2px;
-    width: 105%;
+    width: 100%;
 }
 
-.input-data .underline::before {
+.inputWrapperLoc .locationForm .underlineLoc {
+    position: absolute;
+    height: 2px;
+    width: 88%;
+}
+
+.input-data .underline::before,
+.locationForm .underlineLoc::before {
     position: absolute;
     content: "";
     height: 100%;
@@ -117,7 +162,8 @@ input:active ~ label{
     transition: transform 0.3s ease;
 }
 
-.input-data input:focus ~ .underline::before{
+.input-data input:focus ~ .underline::before,
+.locationForm input:focus ~ .underlineLoc::before{
     transform: scaleX(1);
     color: #4158d0;
 }
@@ -308,7 +354,7 @@ button#next:hover,
 
 .statBackground {
     position: relative;
-    background-image: url('./imgs/cat.jpeg');
+    background-image: url('./imgs/catbeer.webp');
     
 }
 
