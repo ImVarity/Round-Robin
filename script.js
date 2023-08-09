@@ -87,8 +87,7 @@ const statContainer = document.querySelector('.statContainer')
 const timeloc = document.querySelector('.date-loc')
 const date = document.querySelector('.date')
 
-const currentDate = new Date().toISOString().slice(0, 10)
-date.textContent = currentDate
+
 
 
 const arrow = document.getElementById('next')
@@ -101,7 +100,7 @@ const place = document.querySelector('.locationForm')
 form.onsubmit = () => handleSubmit(event)
 place.onsubmit = () => handleSubmitLocation(event)
 arrow.addEventListener('click', () => roundDisplay(currentRound))
-
+getDate()
 
 
 
@@ -321,8 +320,12 @@ function endScreen() {
 
     }
 
-    let topThree = calculatePositionTopThree(winners)
+
+
+    const topThree = calculatePosition()
+        
     adjustPosition(topThree)
+
     let goldKey = topThree.indexOf(1) + 1
     let silverKey = topThree.indexOf(2) + 1
     let bronzeKey = topThree.indexOf(3) + 1
@@ -342,31 +345,42 @@ function endScreen() {
         const playerWins = document.createElement('div')
         const playerLosses = document.createElement('div')
         const playerTies = document.createElement('div')
+        const placement = document.createElement('div')
 
 
         playerName.textContent = `${nameText}`
         playerWins.textContent = `${winsText}`
         playerLosses.textContent = `${lossesText}`
         playerTies.textContent = `${tiesText}`
+        placement.textContent = '3rd'
+
 
         if (key == 1){
             card.style.cssText = "margin-bottom: 300px"
             const crown = document.createElement('div')
+            crown.style.cssText = "margin-bottom: 100px"
             crown.className = "crown"
             card.appendChild(crown)
+            placement.textContent = '1st'
 
         }
         if (key == 2)
+        {
             card.style.cssText = "margin-bottom: 150px"
+            placement.textContent = '2nd'
+
+        }
 
         playerWins.style.cssText = "color: gold;"
         playerLosses.style.cssText = "color: red;"
         playerTies.style.cssText = "color: green;"
+        placement.style.cssText = "margin-top: 30px; font-size: 30px; font-weight: bold;"
 
         card.classList.add('statCard')
 
         // Add if want scores under podium cards
         card.appendChild(playerName)
+        card.appendChild(placement)
         // card.appendChild(playerWins)
         // card.appendChild(playerLosses)
         // card.appendChild(playerTies)
@@ -742,27 +756,6 @@ function calculatePosition() {
 
 
 
-function calculatePositionTopThree(list) {
-    let positions = []
-    let match = []
-
-    for (let i = 0; i < Players; i++) {
-        positions.push(list[i])
-        match.push(list[i])
-        
-    }
-
-    positions.sort((a, b) => b - a)
-
-    for (let i = 0; i < Players; i++) {
-        match[i] = positions.indexOf(match[i]) + 1
-    }
-
-    return match
-}
-
-
-
 function adjustPosition(list) {
 
     let copy = JSON.parse(JSON.stringify(list))
@@ -794,11 +787,26 @@ function adjustPosition(list) {
 
 
 
+function getDate() {
+    let currentDate = new Date().toISOString().slice(0, 8)
+    let day = new Date().toISOString().slice(9, 10)
+    const currentTime = new Date().toISOString().slice(11, 13)
+    if (currentTime < 7)
+        day = day - 1
+
+    if (day.length > 1)
+        currentDate += day
+    else
+        currentDate += "0" + day
+    date.textContent = currentDate
+}
+
+
 // PLAYER SUBMISSION FUNCTIONS
 
 function handleSubmit(event) {
     event.preventDefault()
-    const userInput = document.getElementById('myInput');
+    const userInput = document.getElementById('myInput')
     const playerList = document.createElement('div')
 
     names[`${playerCount}`] = `${userInput.value.toUpperCase()}`
