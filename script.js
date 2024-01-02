@@ -788,17 +788,47 @@ function adjustPosition(list) {
 
 
 function getDate() {
-    let currentDate = new Date().toISOString().slice(0, 8)
-    let day = new Date().toISOString().slice(9, 10)
-    const currentTime = new Date().toISOString().slice(11, 13)
-    if (currentTime < 7)
-        day = day - 1
 
-    if (day.length > 1)
-        currentDate += day
+    conversion = {
+        "Jan": 1,
+        "Feb": 2,
+        "Mar": 3,
+        "Apr": 4,
+        "May": 5,
+        "Jun": 6,
+        "Jul": 7,
+        "Aug": 8,
+        "Sep": 9,
+        "Oct": 10,
+        "Nov": 11,
+        "Dec": 12
+    }
+
+    var checkDate = new Date()
+    var utcDate = new Date(checkDate.toUTCString());
+    utcDate.setHours(utcDate.getHours() - 12);
+    var usDate = new Date(utcDate);
+    let currentDate = usDate.toString()
+    let month = currentDate.slice(4, 7)
+    let day = currentDate.slice(8, 10)
+    let year = currentDate.slice(13, 15)
+    let time = currentDate.slice(16, 21)
+
+    if (day < 10)
+        day = day.slice(1, 2)
+
+    month = conversion[month]
+
+
+    if (time.slice(0, 2) > 12)
+        time  = time.slice(0, 2) - 12 + time.slice(2) + " pm"
     else
-        currentDate += "0" + day
-    date.textContent = currentDate
+        time = time.slice(1) + " am"
+
+    var fixedDate = month + "-" + day + "-" + year + " | " + time
+
+    date.textContent = fixedDate
+
 }
 
 
